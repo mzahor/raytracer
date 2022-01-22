@@ -1,16 +1,20 @@
 #include <iostream>
 #include "vec3.hpp"
+#include "ray.hpp"
 
 void render_gradient();
 void test();
 
 int main()
 {
-    render_gradient();
+    // render_gradient();
+    test();
 }
 
 void test()
 {
+    ray r(point3(1, 2, 3), vec3(4, 5, 6));
+    std::cout << r.at(2) << std::endl;
 }
 
 void render_gradient()
