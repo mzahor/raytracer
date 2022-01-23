@@ -11,9 +11,25 @@ T lerp(T start, T end, double t)
     return (1 - t) * start + t * end;
 }
 
+inline double sqr(double a)
+{
+    return a * a;
+}
+
+bool hits_sphere(const ray &r, point3 center, double radius)
+{
+    auto b = r.direction();
+    auto a = r.origin();
+    auto oc = r.origin() - center;
+    double d = sqr(dot(2 * b, oc)) - 4 * (dot(b, b) * dot(oc, oc) - sqr(radius));
+    return d >= 0;
+}
+
 color ray_color(const ray &r)
 {
     vec3 unit_direction = unit_vector(r.direction());
+    if (hits_sphere(r, point3(0, 0, 1), 0.5))
+        return color(1, 0, 0);
     // vec3 unit_direction = r.direction() / 2.0;
     color c = lerp(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), (unit_direction.y() + 1.0) * 0.5);
     // std::cerr << unit_direction << ' ' <<  (unit_direction.y() + 1.0) * 0.5<< '\n';
