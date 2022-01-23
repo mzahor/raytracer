@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "camera.h"
 
 color ray_color(const ray &r, const hittable &world)
 {
@@ -22,18 +23,11 @@ void render()
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     const double aspect_ratio = 16.0 / 9.0;
-    const int image_width = 680;
+    const int image_width = 640;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
+    const int samples_per_pixel = 50;
 
-    const double viewport_height = 2.0;
-    const double viewport_width = viewport_height * aspect_ratio;
-    const double focal_length = 1.0;
-
-    auto origin = point3(0, 0, 0);
-    auto horizontal = vec3(viewport_width, 0, 0);
-    auto vertical = vec3(0, viewport_height, 0);
-    auto lower_left_corner = origin - vec3(0, 0, focal_length) - horizontal / 2 - vertical / 2;
-    std::cerr << "Lower left: " << lower_left_corner << '\n';
+    camera cam(aspect_ratio);
 
     std::cout << "P3\n"
               << image_width << " " << image_height << "\n256\n";
@@ -42,12 +36,17 @@ void render()
         std::cerr << "Remaining: " << i << std::endl;
         for (int j = 0; j < image_width; j++)
         {
-            double u = static_cast<double>(j) / (image_width - 1);
-            double v = static_cast<double>(i) / (image_height - 1);
-            ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+            color pixel_color;
+            for (int s = 0; s < samples_per_pixel; s++)
+            {
+                double u = static_cast<double>(j + random_double()) / (image_width - 1);
+                double v = static_cast<double>(i + random_double()) / (image_height - 1);
+                auto r = cam.cast_ray(u, v);
 
-            color pixel_color = ray_color(r, world);
-            write_color(std::cout, pixel_color);
+                pixel_color += ray_color(r, world);
+            }
+
+            write_color(std::cout, pixel_color, samples_per_pixel);
         }
     }
     std::cerr << "Done!" << std::endl;

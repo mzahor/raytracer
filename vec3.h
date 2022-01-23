@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <iostream>
+#include "utils.h"
 
 using std::sqrt;
 
@@ -113,14 +114,6 @@ inline vec3 cross(const vec3 &left, const vec3 &right)
 inline vec3 unit_vector(const vec3 &vec)
 {
     return vec / vec.length();
-}
-
-void write_color(std::ostream &out, const color &col)
-{
-    out
-        << static_cast<int>(col.x() * 255.999) << ' '
-        << static_cast<int>(col.y() * 255.999) << ' '
-        << static_cast<int>(col.z() * 255.999) << '\n';
 }
 
 #endif
