@@ -2,8 +2,7 @@
 #include "vec3.hpp"
 #include "ray.hpp"
 
-void render_gradient();
-void test();
+void render();
 
 template <typename T>
 T lerp(T start, T end, double t)
@@ -16,40 +15,40 @@ inline double sqr(double a)
     return a * a;
 }
 
-bool hits_sphere(const ray &r, point3 center, double radius)
+double hit_sphere(const ray &r, point3 center, double radius)
 {
-    auto b = r.direction();
-    auto a = r.origin();
     auto oc = r.origin() - center;
-    double d = sqr(dot(2 * b, oc)) - 4 * (dot(b, b) * dot(oc, oc) - sqr(radius));
-    return d >= 0;
+    auto a = dot(r.direction(), r.direction());
+    auto b = 2.0 * dot(r.direction(), oc);
+    auto c = dot(oc, oc) - sqr(radius);
+    double d = sqr(b) - 4.0 * a * c;
+    if (d < 0.0)
+        return -1.0;
+    auto t = (-b - sqrt(d)) / (2 * a);
+    return t;
 }
 
 color ray_color(const ray &r)
 {
     vec3 unit_direction = unit_vector(r.direction());
-    if (hits_sphere(r, point3(0, 0, 1), 0.5))
-        return color(1, 0, 0);
-    // vec3 unit_direction = r.direction() / 2.0;
+    point3 center(0, 0, -1);
+    auto t = hit_sphere(r, center, 0.5);
+
+    if (t > 0.0)
+    {
+        auto n = unit_vector(r.at(t) - center);
+        return color(n.x() + 1, n.y() + 1, n.z() + 1) * 0.5;
+    }
     color c = lerp(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), (unit_direction.y() + 1.0) * 0.5);
-    // std::cerr << unit_direction << ' ' <<  (unit_direction.y() + 1.0) * 0.5<< '\n';
-    // std::cin.get();
     return c;
 }
 
 int main()
 {
-    render_gradient();
-    // test();
+    render();
 }
 
-void test()
-{
-    ray r(point3(1, 2, 3), vec3(4, 5, 6));
-    std::cout << r.at(2) << std::endl;
-}
-
-void render_gradient()
+void render()
 {
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 400;
