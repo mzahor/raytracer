@@ -40,7 +40,6 @@ bool sphere::hit(const ray &r, double t_min, double t_max, hit_record &hr) const
     hr.p = r.at(t);
     vec3 out_normal = unit_vector(hr.p - center);
     hr.set_normal(r, out_normal);
-    std::cerr<< hr.normal << '\n';
     // hr.normal = (hr.p - center) / radius;
 
     return true;
