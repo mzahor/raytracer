@@ -18,13 +18,13 @@ inline double sqr(double a)
 double hit_sphere(const ray &r, point3 center, double radius)
 {
     auto oc = r.origin() - center;
-    auto a = dot(r.direction(), r.direction());
-    auto b = 2.0 * dot(r.direction(), oc);
-    auto c = dot(oc, oc) - sqr(radius);
-    double d = sqr(b) - 4.0 * a * c;
+    auto a = r.direction().length_squared();
+    auto half_b = dot(r.direction(), oc);
+    auto c = oc.length_squared() - sqr(radius);
+    double d = sqr(half_b) - a * c;
     if (d < 0.0)
         return -1.0;
-    auto t = (-b - sqrt(d)) / (2 * a);
+    auto t = (-half_b - sqrt(d)) / a;
     return t;
 }
 
