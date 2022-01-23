@@ -16,6 +16,9 @@ public:
         return orig + dir * t;
     }
 
+    vec3 origin() const { return orig; }
+    vec3 direction() const { return dir; }
+
 public:
     point3 orig;
     vec3 dir;

@@ -5,10 +5,26 @@
 void render_gradient();
 void test();
 
+template <typename T>
+T lerp(T start, T end, double t)
+{
+    return (1 - t) * start + t * end;
+}
+
+color ray_color(const ray &r)
+{
+    vec3 unit_direction = unit_vector(r.direction());
+    // vec3 unit_direction = r.direction() / 2.0;
+    color c = lerp(color(1.0, 1.0, 1.0), color(0.5, 0.7, 1.0), (unit_direction.y() + 1.0) * 0.5);
+    // std::cerr << unit_direction << ' ' <<  (unit_direction.y() + 1.0) * 0.5<< '\n';
+    // std::cin.get();
+    return c;
+}
+
 int main()
 {
-    // render_gradient();
-    test();
+    render_gradient();
+    // test();
 }
 
 void test()
@@ -19,20 +35,33 @@ void test()
 
 void render_gradient()
 {
-    const int image_width = 256;
-    const int image_height = 256;
+    const double aspect_ratio = 16.0 / 9.0;
+    const int image_width = 400;
+    const int image_height = static_cast<int>(image_width / aspect_ratio);
+
+    const double viewport_height = 2.0;
+    const double viewport_width = viewport_height * aspect_ratio;
+    const double focal_length = 1.0;
+
+    auto origin = point3(0, 0, 0);
+    auto horizontal = vec3(viewport_width, 0, 0);
+    auto vertical = vec3(0, viewport_height, 0);
+    auto lower_left_corner = origin - vec3(0, 0, focal_length) - horizontal / 2 - vertical / 2;
+    std::cerr << "Lower left: " << lower_left_corner << '\n';
+
     std::cout << "P3\n"
-              << image_height << " " << image_width << "\n256\n";
-    for (int i = image_height; i >= 0; i--)
+              << image_width << " " << image_height << "\n256\n";
+    for (int i = image_height - 1; i >= 0; i--)
     {
         std::cerr << "Remaining: " << i << std::endl;
         for (int j = 0; j < image_width; j++)
         {
-            auto col = color(
-                static_cast<double>(j) / (image_width - 1),
-                static_cast<double>(i) / (image_height - 1),
-                0.25);
-            write_color(std::cout, col);
+            double u = static_cast<double>(j) / (image_width - 1);
+            double v = static_cast<double>(i) / (image_height - 1);
+            ray r(origin, lower_left_corner + u * horizontal + v * vertical - origin);
+
+            color pixel_color = ray_color(r);
+            write_color(std::cout, pixel_color);
         }
     }
     std::cerr << "Done!" << std::endl;
