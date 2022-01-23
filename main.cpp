@@ -22,7 +22,7 @@ void render()
     world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     const double aspect_ratio = 16.0 / 9.0;
-    const int image_width = 400;
+    const int image_width = 680;
     const int image_height = static_cast<int>(image_width / aspect_ratio);
 
     const double viewport_height = 2.0;
