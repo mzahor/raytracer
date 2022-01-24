@@ -14,7 +14,9 @@ color ray_color(const ray& r, const hittable& world, int depth) {
         return color(0, 0, 0);
     hit_record hr;
     if (world.hit(r, 0.001, infinity, hr)) {
+        // point3 target = hr.p + hr.normal + random_in_unit_sphere();
         point3 target = hr.p + hr.normal + random_unit_vector();
+        // point3 target = hr.p + hr.normal + random_in_hemisphere(hr.normal);
         return 0.5 * ray_color(ray(hr.p, target - hr.p), world, depth - 1);
     }
     vec3 unit_direction = unit_vector(r.direction());
