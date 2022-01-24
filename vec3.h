@@ -1,6 +1,7 @@
 #ifndef VEC3_H
 #define VEC3_H
 
+#include "math_utils.h"
 #include <cmath>
 #include <iostream>
 
@@ -39,6 +40,15 @@ class vec3 {
     double length() const { return sqrt(length_squared()); }
 
     double length_squared() const { return x() * x() + y() * y() + z() * z(); }
+
+    inline static vec3 random() {
+        return vec3(random_double(), random_double(), random_double());
+    }
+
+    inline static vec3 random(double min, double max) {
+        return vec3(random_double(min, max), random_double(min, max),
+                    random_double(min, max));
+    }
 
   public:
     double e[3];
@@ -85,5 +95,18 @@ inline vec3 cross(const vec3& left, const vec3& right) {
 }
 
 inline vec3 unit_vector(const vec3& vec) { return vec / vec.length(); }
+
+vec3 random_in_unit_sphere() {
+    while (true) {
+        auto v = vec3::random(-1, 1);
+        if (v.length_squared() >= 1)
+            continue;
+        return v;
+    }
+}
+
+inline vec3 random_unit_sphere() {
+    return unit_vector(random_in_unit_sphere());
+}
 
 #endif
