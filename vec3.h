@@ -105,6 +105,12 @@ vec3 random_in_unit_sphere() {
     }
 }
 
+vec3 reflect(const vec3& v, const vec3 n) {
+    // return v - 2 * dot(v, n) / dot(n, n) * n;
+    // since n is a unit vector, dot(n, n) == 1
+    return v - 2 * dot(v, n) * n;
+}
+
 inline vec3 random_unit_vector() {
     return unit_vector(random_in_unit_sphere());
 }
