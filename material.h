@@ -29,15 +29,16 @@ class lambertian : public material {
 
 class metal : public material {
   public:
-    metal(const color& a) : albedo(a) {}
+    metal(const color& a, double f) : albedo(a), fuzz(f < 1 ? f : 1) {}
     bool scatter(const ray& r_in, const hit_record& hr, color& attenuation,
                  ray& scattered) const override {
         auto reflected = reflect(r_in.direction(), hr.normal);
-        scattered = ray(hr.p, reflected);
+        scattered = ray(hr.p, reflected + fuzz * random_in_unit_sphere());
         attenuation = albedo;
         return dot(scattered.direction(), hr.normal) > 0;
     }
 
   public:
     color albedo;
+    double fuzz;
 };
