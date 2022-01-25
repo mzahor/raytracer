@@ -9,8 +9,6 @@
 #include "ray.h"
 #include "vec3.h"
 
-using std::make_shared;
-using std::shared_ptr;
 using std::sqrt;
 
 inline int get_col(double val) {

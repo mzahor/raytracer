@@ -5,17 +5,15 @@
 #include <memory>
 #include <vector>
 
-using std::shared_ptr;
-
 class hittable_list : public hittable {
   private:
-    std::vector<shared_ptr<hittable>> objects;
+    std::vector<std::shared_ptr<hittable>> objects;
 
   public:
     hittable_list() {}
-    hittable_list(shared_ptr<hittable> obj) { add(obj); }
+    hittable_list(std::shared_ptr<hittable> obj) { add(obj); }
 
-    void add(shared_ptr<hittable> obj) { objects.push_back(obj); }
+    void add(std::shared_ptr<hittable> obj) { objects.push_back(obj); }
 
     void clear() { objects.clear(); }
 
