@@ -32,14 +32,12 @@ class metal : public material {
     metal(const color& a) : albedo(a) {}
     bool scatter(const ray& r_in, const hit_record& hr, color& attenuation,
                  ray& scattered) const override {
-        point3 scatter_direction = hr.normal + random_unit_vector();
-        if (scatter_direction.near_zero())
-            scatter_direction = hr.normal;
-        scattered = ray(hr.p, scatter_direction);
+        auto reflected = reflect(r_in.direction(), hr.normal);
+        scattered = ray(hr.p, reflected);
         attenuation = albedo;
-        return true;
+        return dot(scattered.direction(), hr.normal) > 0;
     }
 
   public:
     color albedo;
-}
+};

@@ -6,7 +6,7 @@ void open_preview(std::string filepath) {
 #ifdef __APPLE__
     system(std::string("open " + filepath).c_str());
 #else
-    std::cerr << "Preview only supported on Mac";
+    std::cerr << "Preview only supported on Mac\n";
 #endif
 }
 
