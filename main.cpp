@@ -14,9 +14,12 @@ color ray_color(const ray& r, const hittable& world, int depth) {
         return color(0, 0, 0);
     hit_record hr;
     if (world.hit(r, 0.001, infinity, hr)) {
-        // point3 target = hr.p + hr.normal + random_in_unit_sphere();
-        point3 target = hr.p + hr.normal + random_unit_vector();
+        // naive
         // point3 target = hr.p + hr.normal + random_in_hemisphere(hr.normal);
+        // cos^3(phi) distribution
+        // point3 target = hr.p + hr.normal + random_in_unit_sphere();
+        // cos(phi) distribution
+        point3 target = hr.p + hr.normal + random_unit_vector();
         return 0.5 * ray_color(ray(hr.p, target - hr.p), world, depth - 1);
     }
     vec3 unit_direction = unit_vector(r.direction());
@@ -27,8 +30,8 @@ color ray_color(const ray& r, const hittable& world, int depth) {
 
 void render() {
     hittable_list world;
-    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
+    world.add(std::make_shared<sphere>(point3(0, 0, -1), 0.5));
+    world.add(std::make_shared<sphere>(point3(0, -100.5, -1), 100));
 
     const double aspect_ratio = 16.0 / 9.0;
     const int image_width = 800;

@@ -50,6 +50,11 @@ class vec3 {
                     random_double(min, max));
     }
 
+    bool near_zero() const {
+        const double s = 1e-8;
+        return fabs(x()) < s && fabs(y()) < s && fabs(z()) < s;
+    }
+
   public:
     double e[3];
 };
