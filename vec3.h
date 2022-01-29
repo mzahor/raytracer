@@ -101,6 +101,15 @@ vec3 random_in_unit_sphere() {
     }
 }
 
+vec3 random_in_unit_disk() {
+    while (true) {
+        auto v = vec3(random_double(-1, 1), random_double(-1, 1), 0);
+        if (v.length_squared() >= 1)
+            continue;
+        return v;
+    }
+}
+
 vec3 reflect(const vec3& v, const vec3 n) {
     // return v - 2 * dot(v, n) / dot(n, n) * n;
     // since n is a unit vector, dot(n, n) == 1

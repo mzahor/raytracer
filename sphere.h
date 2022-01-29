@@ -4,6 +4,7 @@
 #include "hittable.h"
 #include "material.h"
 #include "utils.h"
+#include <cstdio>
 #include <memory>
 
 class sphere : public hittable {
