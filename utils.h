@@ -11,12 +11,9 @@
 
 using std::sqrt;
 
-inline int get_col(double val) {
-    return static_cast<int>(clamp(val, 0, 0.999) * 256);
-}
+inline int get_col(double val) { return static_cast<int>(clamp(val, 0, 0.999) * 256); }
 
-void write_color(std::ostream& out, const color& col,
-                 double samples_per_pixel) {
+void write_color(std::ostream& out, const color& col, double samples_per_pixel) {
     auto r = col.x();
     auto g = col.y();
     auto b = col.z();

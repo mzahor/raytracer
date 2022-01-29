@@ -41,13 +41,10 @@ class vec3 {
 
     double length_squared() const { return x() * x() + y() * y() + z() * z(); }
 
-    inline static vec3 random() {
-        return vec3(random_double(), random_double(), random_double());
-    }
+    inline static vec3 random() { return vec3(random_double(), random_double(), random_double()); }
 
     inline static vec3 random(double min, double max) {
-        return vec3(random_double(min, max), random_double(min, max),
-                    random_double(min, max));
+        return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
     }
 
     bool near_zero() const {
@@ -67,23 +64,18 @@ inline std::ostream& operator<<(std::ostream& out, const vec3& vec) {
 }
 
 inline vec3 operator+(const vec3& left, const vec3& right) {
-    return vec3(left.x() + right.x(), left.y() + right.y(),
-                left.z() + right.z());
+    return vec3(left.x() + right.x(), left.y() + right.y(), left.z() + right.z());
 }
 
 inline vec3 operator-(const vec3& left, const vec3& right) {
-    return vec3(left.x() - right.x(), left.y() - right.y(),
-                left.z() - right.z());
+    return vec3(left.x() - right.x(), left.y() - right.y(), left.z() - right.z());
 }
 
 inline vec3 operator*(const vec3& left, const vec3& right) {
-    return vec3(left.x() * right.x(), left.y() * right.y(),
-                left.z() * right.z());
+    return vec3(left.x() * right.x(), left.y() * right.y(), left.z() * right.z());
 }
 
-inline vec3 operator*(double t, const vec3& vec) {
-    return vec3(vec.x() * t, vec.y() * t, vec.z() * t);
-}
+inline vec3 operator*(double t, const vec3& vec) { return vec3(vec.x() * t, vec.y() * t, vec.z() * t); }
 
 inline vec3 operator*(const vec3& vec, double t) { return t * vec; }
 
@@ -94,8 +86,7 @@ inline double dot(const vec3& left, const vec3& right) {
 }
 
 inline vec3 cross(const vec3& left, const vec3& right) {
-    return vec3(left.e[1] * right.e[2] - left.e[2] * right.e[1],
-                left.e[2] * right.e[0] - left.e[0] * right.e[2],
+    return vec3(left.e[1] * right.e[2] - left.e[2] * right.e[1], left.e[2] * right.e[0] - left.e[0] * right.e[2],
                 left.e[0] * right.e[1] - left.e[1] * right.e[0]);
 }
 
@@ -116,9 +107,14 @@ vec3 reflect(const vec3& v, const vec3 n) {
     return v - 2 * dot(v, n) * n;
 }
 
-inline vec3 random_unit_vector() {
-    return unit_vector(random_in_unit_sphere());
+vec3 refract(const vec3& v, const vec3& n, double etai_over_etat) {
+    auto cos_theta = fmin(dot(-v, n), 1.0);
+    vec3 r_out_perp = etai_over_etat * (v + cos_theta * n);
+    vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_squared())) * n;
+    return r_out_perp + r_out_parallel;
 }
+
+inline vec3 random_unit_vector() { return unit_vector(random_in_unit_sphere()); }
 
 inline vec3 random_in_hemisphere(const vec3& normal) {
     auto r = random_in_unit_sphere();

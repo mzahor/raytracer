@@ -17,12 +17,10 @@ class hittable_list : public hittable {
 
     void clear() { objects.clear(); }
 
-    bool hit(const ray& r, double t_min, double t_max,
-             hit_record& hr) const override;
+    bool hit(const ray& r, double t_min, double t_max, hit_record& hr) const override;
 };
 
-bool hittable_list::hit(const ray& r, double t_min, double t_max,
-                        hit_record& hr) const {
+bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record& hr) const {
     hit_record temp_hr;
     double closest_so_far = t_max;
     bool hit_any = false;
